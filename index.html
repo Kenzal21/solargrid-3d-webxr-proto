@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SolarGrid 3D - Renewable Energy Builder</title>
+  <style>
+    body { margin: 0; overflow: hidden; font-family: system-ui, sans-serif; background: #0f172a; }
+    #ui {
+      position: absolute; top: 16px; left: 16px;
+      background: rgba(15, 23, 42, 0.85); color: #f8fafc;
+      padding: 16px; border-radius: 10px; border: 1px solid #334155;
+      max-width: 280px;
+    }
+    h2 { margin: 0 0 8px 0; font-size: 1.1rem; color: #38bdf8; }
+    .stat { margin: 6px 0; font-size: 0.95rem; }
+    button {
+      margin-top: 8px; margin-right: 6px; padding: 8px 12px;
+      border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
+    }
+    .active { background: #22c55e; color: #052e16; }
+    .inactive { background: #334155; color: #f8fafc; }
+    #msg { margin-top: 10px; font-weight: bold; color: #facc15; }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <h2>🌱 SolarGrid 3D</h2>
+    <div class="stat">⚡ Clean Energy: <span id="energy">0</span> / 100 MW</div>
+    <div class="stat">💰 Budget: $<span id="budget">500</span></div>
+    <div>
+      <button id="btnSolar" class="active" onclick="selectType('solar')">Solar ($50 | +10MW)</button>
+      <button id="btnWind" class="inactive" onclick="selectType('wind')">Turbine ($100 | +25MW)</button>
+    </div>
+    <div id="msg">Click green land tiles to build!</div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    let energy = 0;
+    let budget = 500;
+    let selectedType = "solar";
+    const turbines = [];
+
+    function selectType(type) {
+      selectedType = type;
+      document.getElementById("btnSolar").className = type === "solar" ? "active" : "inactive";
+      document.getElementById("btnWind").className = type === "wind" ? "active" : "inactive";
+    }
+
+    // Scene Setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0f172a);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(7, 8, 9);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 10, 7);
+    scene.add(dirLight);
+
+    // 5x5 Grid of Land Tiles
+    const tiles = [];
+    const tileGeo = new THREE.BoxGeometry(1.4, 0.3, 1.4);
+    for (let x = -2; x <= 2; x++) {
+      for (let z = -2; z <= 2; z++) {
+        const mat = new THREE.MeshStandardMaterial({ color: 0x16a34a });
+        const tile = new THREE.Mesh(tileGeo, mat);
+        tile.position.set(x * 1.6, 0, z * 1.6);
+        tile.userData = { occupied: false };
+        scene.add(tile);
+        tiles.push(tile);
+      }
+    }
+
+    // Raycaster for 3D Clicking
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener("click", (event) => {
+      if (energy >= 100) return;
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(tiles);
+
+      if (intersects.length > 0) {
+        const tile = intersects[0].object;
+        if (tile.userData.occupied) return;
+
+        if (selectedType === "solar" && budget >= 50) {
+          budget -= 50;
+          energy += 10;
+          tile.userData.occupied = true;
+          addSolarPanel(tile.position);
+        } else if (selectedType === "wind" && budget >= 100) {
+          budget -= 100;
+          energy += 25;
+          tile.userData.occupied = true;
+          addWindTurbine(tile.position);
+        } else {
+          document.getElementById("msg").textContent = "Not enough budget!";
+          return;
+        }
+
+        document.getElementById("energy").textContent = energy;
+        document.getElementById("budget").textContent = budget;
+
+        if (energy >= 100) {
+          document.getElementById("msg").textContent = "🎉 City 100% Powered by Clean Energy!";
+        } else if (budget < 50) {
+          document.getElementById("msg").textContent = "Out of budget! Refresh to retry.";
+        }
+      }
+    });
+
+    function addSolarPanel(pos) {
+      const panel = new THREE.Mesh(
+        new THREE.BoxGeometry(1.0, 0.1, 0.8),
+        new THREE.MeshStandardMaterial({ color: 0x2563eb, metalness: 0.6, roughness: 0.2 })
+      );
+      panel.position.set(pos.x, 0.35, pos.z);
+      panel.rotation.x = 0.3;
+      scene.add(panel);
+    }
+
+    function addWindTurbine(pos) {
+      const pole = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.08, 0.12, 1.8),
+        new THREE.MeshStandardMaterial({ color: 0xf8fafc })
+      );
+      pole.position.set(pos.x, 1.0, pos.z);
+      scene.add(pole);
+
+      const blades = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.15, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0x38bdf8 })
+      );
+      blades.position.set(pos.x, 1.8, pos.z + 0.12);
+      scene.add(blades);
+      turbines.push(blades);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      turbines.forEach(b => b.rotation.z += 0.05);
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
