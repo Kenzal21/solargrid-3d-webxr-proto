@@ -1,31 +1,33 @@
+# 🌱 SolarGrid 3D
 
-### 2. `README.md` for **SolarGrid 3D**
-Create a file named `README.md` inside your `solargrid-3d` repository and paste this:
+A browser-based 3D microgrid builder powered by **Three.js** and **WebGL**. Plan, budget, and construct renewable energy infrastructure to power a sustainable community.
 
-```markdown
-# 🌱 SolarGrid 3D: Renewable Energy Builder
-
-An interactive 3D spatial strategy prototype built with **Three.js** and **WebGL**, where players design a clean-energy microgrid to power a sustainable community within a fixed budget.
-
-🎮 **[Play Live Demo](https://YOUR-USERNAME.github.io/solargrid-3d/)** *(Replace with your GitHub Pages link)*
+👉 **[Play the Live Demo](https://YOUR-USERNAME.github.io/solargrid-3d/)** *(Update with your GitHub Pages link)*
 
 ---
 
-## 🌍 Concept & VR/3D Relevance
-Transitioning to renewable energy requires smart spatial planning and resource management. Built using WebGL (the foundational web graphics layer behind WebXR/VR), **SolarGrid 3D** demonstrates interactive 3D object placement, raycasting, and real-time environmental simulation.
+## 🎯 Project Overview
+**SolarGrid 3D** explores clean energy planning through interactive 3D spatial design. Built with WebGL—the core graphics technology behind WebXR and browser-based VR—this prototype demonstrates 3D object placement, raycasting, and real-time animation in a lightweight, zero-dependency web app.
 
-## 🛠️ Tech Stack & Features
-* **Three.js (WebGL):** 3D scene rendering, directional lighting, primitive mesh construction, and real-time rotor animations.
-* **3D Raycasting:** Translates 2D mouse clicks into 3D world-space tile selection.
-* **Resource Management Logic:** Balances budget constraints against megawatt (MW) clean-energy output targets.
+## ⚡ Gameplay & Rules
+Your goal is to generate **100 MW** of clean energy on a 5×5 land grid without exceeding your **$500** starting budget.
 
-## 🕹️ How to Play
-1. Select **Solar Panel ($50 | +10 MW)** or **Wind Turbine ($100 | +25 MW)** from the top-left control panel.
-2. Click any open green land tile on the 5×5 grid to construct your clean energy infrastructure.
-3. Reach **100 MW** of clean energy before running out of your **$500** budget.
+| Structure | Cost | Power Output | Best For |
+| :--- | :---: | :---: | :--- |
+| **☀️ Solar Panel** | $50 | +10 MW | Low-cost, steady grid expansion |
+| **🌀 Wind Turbine** | $100 | +25 MW | High-efficiency power generation |
 
-## 🚀 Running Locally
-No installation or bundler required. Clone the repository and open `index.html` in a browser (or run via a local server like VS Code Live Server):
-```bash
-git clone [https://github.com/YOUR-USERNAME/solargrid-3d.git](https://github.com/YOUR-USERNAME/solargrid-3d.git)
-cd solargrid-3d
+### Controls
+* **Select Structure:** Click the **Solar** or **Turbine** button in the top-left HUD.
+* **Build:** Click any open green tile on the 3D grid to place your selected structure.
+* **Restart:** Refresh the browser page to reset your budget and grid.
+
+## 🛠️ Built With
+* **HTML5 & CSS3** — Minimalist HUD overlay and responsive viewport layout.
+* **JavaScript (ES6)** — Game state management, budget validation, and animation loop.
+* **Three.js (r128)** — 3D scene rendering, lighting, procedural meshes, and mouse-to-world raycasting.
+
+## 💻 Run Locally
+1. Download or clone this repository:
+   ```bash
+   git clone [https://github.com/YOUR-USERNAME/solargrid-3d.git](https://github.com/YOUR-USERNAME/solargrid-3d.git)
