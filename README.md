@@ -1,4 +1,3 @@
----
 
 ### 2. `README.md` for **SolarGrid 3D**
 Create a file named `README.md` inside your `solargrid-3d` repository and paste this:
