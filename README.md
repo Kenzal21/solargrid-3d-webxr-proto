@@ -2,8 +2,6 @@
 
 A browser-based 3D microgrid builder powered by **Three.js** and **WebGL**. Plan, budget, and construct renewable energy infrastructure to power a sustainable community.
 
-👉 **[Play the Live Demo](https://YOUR-USERNAME.github.io/solargrid-3d/)** *(Update with your GitHub Pages link)*
-
 ---
 
 ## 🎯 Project Overview
@@ -27,7 +25,5 @@ Your goal is to generate **100 MW** of clean energy on a 5×5 land grid without 
 * **JavaScript (ES6)** — Game state management, budget validation, and animation loop.
 * **Three.js (r128)** — 3D scene rendering, lighting, procedural meshes, and mouse-to-world raycasting.
 
-## 💻 Run Locally
-1. Download or clone this repository:
-   ```bash
-   git clone [https://github.com/YOUR-USERNAME/solargrid-3d.git](https://github.com/YOUR-USERNAME/solargrid-3d.git)
+How to play?
+just download the index file and double click it lol
